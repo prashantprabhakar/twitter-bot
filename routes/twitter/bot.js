@@ -3,6 +3,7 @@ const twitter = require('./../../utils/twiter')
 const tweetsModel = require('./../../models/tweets.model')
 const jobsDataModel = require('./../../models/jobsdata.model')
 const { twitterJobTime } = require('./../../config/config')
+const userModel = require('./../../models/user.model')
 
 const searchTweets = async(searchterm) => {
   try {
@@ -18,8 +19,10 @@ const searchTweets = async(searchterm) => {
 
     let tweets = tweetsData.statuses
     console.log(`total tweets fetched ${tweets.length}`)
-
-    tweets.forEach(async tweet => await addTweetToDb(tweet))
+    tweets.forEach(async tweet => {
+      await addTweetToDb(tweet)
+      await addUserTooDb(tweet.user)
+    })
     await jobsDataModel.updateOne({ key: 'max_tweeet_id'}, {$set: {value: tweetsData.search_metadata.max_id_str}})
   } catch(e) {
     console.log(e)
@@ -48,6 +51,20 @@ async function addTweetToDb(tweet) {
     console.log(e)
   }
 
+}
+
+async function addUserTooDb(user) {
+  try{
+    let { id_str:userid, name, screen_name, location } = user
+    // check if user already exists
+    let ifuserExists = await userModel.findOne({ userid })
+    if(ifuserExists) return
+    await  new userModel({
+      userid, name, screen_name, location
+    }).save()
+  } catch(e){
+    console.log(e)
+  }
 }
 
 searchTweets('bitcoin')
