@@ -4,7 +4,7 @@ module.exports = {
 
     twitterJobTime: 30*60*1000, // 30 minutes
 
-    twitterConfig = {
+    twitterConfig : {
         consumer_key: '',
         consumer_secret: '',
         access_token_key: '',
