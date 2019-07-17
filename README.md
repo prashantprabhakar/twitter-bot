@@ -19,3 +19,7 @@ A bot that fetches tweets using twitter npm package
 - **Query Params:** userid, sortBy, limit(default:10), skip(default:0)
 - **Note:** sortBy only  supports retweet_count and created_at
 
+##### Get user list
+
+- **API Endpoint:** /api/tweets/user-list
+
