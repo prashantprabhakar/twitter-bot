@@ -4,6 +4,7 @@ const router = express.Router()
 
 const { handleResponse } = require('./../../utils/responseHanlder')
 const tweetsModel = require('./../../models/tweets.model')
+const userModel = require('./../../models/user.model')
 
 router.get('/count-tweets-by-user/:userid', async(req, res) => {
   try {
@@ -33,6 +34,17 @@ router.get('/sorted-tweets/', async(req, res) =>{
     let tweets = await tweetsModel.find(searchQuery).sort(sortBy).skip(skip).limit(limit)
     return handleResponse(res,200, 'Fetched counts', tweets)
   } catch(e){
+    console.log(e)
+    return handleResponse(res, 500, e.mesage)
+  }
+})
+
+
+router.get('/user-list', async(req, res) => {
+  try{
+    let users = await userModel.find()
+    return handleResponse(res, 200, 'fetched users', users)
+  } catch(e) {
     console.log(e)
     return handleResponse(res, 500, e.mesage)
   }
